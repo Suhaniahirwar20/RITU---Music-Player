@@ -1,0 +1,127 @@
+console.log("Welcome to RITU");
+
+//Initialize the variables
+let songIndex=1;
+let audioElement=new Audio('1.mp3.mp3');
+let masterplay=document.getElementById('masterplay');
+let myProgressBar=document.getElementById('myProgressBar');
+let gif=document.getElementById('gif');
+let masterSongname=document.getElementById('masterSongname');
+let SongItem=Array.from(document.getElementsByClassName('SongItem'));
+
+let songs=[
+    {songname:"Soniyo",filepath:"1.mp3.mp3",coverPath:"covers.jpg"},
+    {songname:"love is a waste of time",filepath:"2.mp3.mp3",coverPath:"covers2.jpg"},
+    {songname:"Do pal",filepath:"3.mp3.mp3",coverPath:"covers3.jpeg"},
+    {songname:"Sau dard",filepath:"4.mp3.mp3",coverPath:"covers4.jpeg"},
+    {songname:"kal ho na ho",filepath:"5.mp3.mp3",coverPath:"covers5.jpeg"},
+    {songname:"Main agar kahoon",filepath:"6.mp3.mp3",coverPath:"covers6.jpeg"},
+    {songname:"crazy Dil",filepath:"7.mp3.mp3",coverPath:"covers7.jpeg"},
+    {songname:"Piyu Bole",filepath:"8.mp3.mp3",coverPath:"covers8.jpeg"},
+    {songname:"KOI_TUMSA_NAHIN",filepath:"9.mp3.mp3",coverPath:"covers9.jfif"},
+    {songname:"Tumhi_Dekho_Naa",filepath:"10.mp3.mp3",coverPath:"covers10.jfif"},
+    {songname:"Main_Hoon_Na_Title_Track",filepath:"11.mp3.mp3",coverPath:"covers11.jfif"},
+]
+
+SongItem.forEach((element,i)=> {
+    element.getElementsByTagName("img")[0].src=songs[i].coverPath;
+    element.getElementsByClassName("songname")[0].innerText=songs[i].songname;
+});
+
+//Handle play/pause click
+masterplay.addEventListener('click',()=>{
+    if(audioElement.paused || audioElement.currentTime<=0){
+        audioElement.play();
+        masterplay.classList.remove('fa-circle-play');
+        masterplay.classList.add('fa-circle-pause');
+        gif.style.opacity=1;
+    }
+    else{
+        audioElement.pause();
+        masterplay.classList.remove('fa-circle-pause');
+        masterplay.classList.add('fa-circle-play');
+        gif.style.opacity=0;
+    }
+});
+const currentTimeDisplay = document.getElementById('currentTime');
+const durationDisplay = document.getElementById('duration');
+
+// Format time in MM:SS format
+function formatTime(seconds) {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
+}
+audioElement.addEventListener('loadedmetadata', () => {
+    durationDisplay.innerText = formatTime(audioElement.duration);
+});
+//listen to Event
+audioElement.addEventListener('timeupdate',()=>{
+currentTimeDisplay.innerText = formatTime(audioElement.currentTime);
+//update seekbar
+const progress=parseInt((audioElement.currentTime/audioElement.duration)*100);
+myProgressBar.value=progress;
+
+});
+
+myProgressBar.addEventListener('change',()=>{
+    audioElement.currentTime=(myProgressBar.value*audioElement.duration)/100;
+});
+
+const makeAllPlays=()=>{
+    Array.from(document.getElementsByClassName('SongItemPlay')).forEach((element)=>{
+        element.classList.remove('fa-circle-pause');
+        element.classList.add('fa-circle-play');
+    })
+}
+
+Array.from(document.getElementsByClassName('SongItemPlay')).forEach((element)=>{
+    element.addEventListener('click',(e)=>{
+        console.log(e.target);
+        makeAllPlays();
+        songIndex=parseInt(e.target.id);
+        e.target.classList.remove('fa-circle-play');
+        e.target.classList.add('fa-circle-pause');
+        audioElement.src=`${songIndex}.mp3.mp3`;
+        masterSongname.innerText=songs[songIndex-1].songname;
+        audioElement.currentTime=0;
+        audioElement.play();
+        gif.style.opacity=1;
+        masterplay.classList.remove('fa-circle-play');
+        masterplay.classList.add('fa-circle-pause');
+    })
+})
+
+document.getElementById('next').addEventListener('click',()=>{
+    if(songIndex>=11){
+        songIndex=1;
+    }
+    else{
+    songIndex+=1;
+    }
+    audioElement.src=`${songIndex}.mp3.mp3`;
+    masterSongname.innerText=songs[songIndex-1].songname;
+    audioElement.currentTime=0;
+    audioElement.play();
+    masterplay.classList.remove('fa-circle-play');
+    masterplay.classList.add('fa-circle-pause');
+
+
+})
+
+document.getElementById('previous').addEventListener('click',()=>{
+    if(songIndex<=1){
+        songIndex=1;
+    }
+    else{
+    songIndex -= 1;
+    }
+    audioElement.src=`${songIndex}.mp3.mp3`;
+    masterSongname.innerText=songs[songIndex-1].songname;
+    audioElement.currentTime=0;
+    audioElement.play();
+    masterplay.classList.remove('fa-circle-play');
+    masterplay.classList.add('fa-circle-pause');
+
+
+})
