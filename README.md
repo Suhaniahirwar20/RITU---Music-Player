@@ -25,3 +25,6 @@ Initializing and playing audio files.
 Updating and syncing the progress bar with the audio timeline.
 Switching between songs using the previous and next buttons.
 Individual play buttons for each song in the list.
+<br>
+
+Author - Suhani ahirwar
